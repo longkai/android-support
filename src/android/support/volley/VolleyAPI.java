@@ -6,6 +6,8 @@
 
 package android.support.volley;
 
+import com.android.volley.Request;
+
 import java.util.Map;
 
 /**
@@ -26,10 +28,24 @@ public class VolleyAPI {
   /** used with post and put in the request body */
   public final Map<String, String> params;
 
-  public VolleyAPI(int method, CharSequence uri, boolean authRequired, Map<String, String> params) {
+  public VolleyAPI(int method, String uri, boolean authRequired, Map<String, String> params) {
     this.method = method;
-    this.uri = uri.toString();
+    this.uri = uri;
     this.authRequired = authRequired;
     this.params = params;
+  }
+
+  public VolleyAPI(int method, CharSequence uri) {
+    this.method = method;
+    this.uri = uri.toString();
+    this.authRequired = false;
+    this.params = null;
+  }
+
+  public VolleyAPI(String uri) {
+    this.method = Request.Method.GET;
+    this.uri = uri;
+    this.authRequired = false;
+    this.params = null;
   }
 }

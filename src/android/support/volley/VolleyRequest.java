@@ -44,6 +44,22 @@ public class VolleyRequest extends Request<JSONObject> {
     mListener = listener;
   }
 
+  public VolleyRequest(String uri, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+    super(Method.GET, uri, errorListener);
+    mListener = listener;
+  }
+
+  public VolleyRequest(VolleyAPI api, VolleyProcessor<JSONObject> processor, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+    super(api.method, api.uri, errorListener);
+    mListener = listener;
+    mProcessor = processor;
+  }
+
+  public VolleyRequest(VolleyAPI api, VolleyProcessor<JSONObject> processor) {
+    super(api.method, api.uri, null);
+    mProcessor = processor;
+  }
+
   @Override protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
     try {
       String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -71,10 +87,10 @@ public class VolleyRequest extends Request<JSONObject> {
   }
 
   @Override public Map<String, String> getHeaders() throws AuthFailureError {
-    return mApi.authRequired ? VolleyAuth.getAuthHeaders() : super.getHeaders();
+    return mApi == null || !mApi.authRequired ? super.getHeaders() : VolleyAuth.getAuthHeaders();
   }
 
   @Override protected Map<String, String> getParams() throws AuthFailureError {
-    return mApi.params == null ? super.getParams() : mApi.params;
+    return mApi == null || mApi.params == null ? super.getParams() : mApi.params;
   }
 }
